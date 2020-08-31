@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>SPB Link Generator</title>
+
+        <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="./css/shop.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    </head>
+<body id="debug">
+    <div class="navbar navbar-static-top navbar-style">
+        <img src="./img/Clip_merchant.png" class="img-fluid header-img" alt="" />
+        <img src="./img/Transparent_Horizontal_Logo.png" class="header-icon-gen ml-1" alt="" />
+    </div>
+    
+    <div class="container">
+        <h1 class="text-center">Gerador de link</h1>
+        <br>
+        <div class="row">
+            <div class="col-md-4">  
+            </div>
+            <div class="col-md-4">
+                <form role="form" name="adjustConfiguration">
+                    <div id="form" class="row">
+                        <div class="col-md">
+                            <label for="cfgitem-itemName" class="label-for">URL do checkout</label>
+                            <input disabled class="form-control" id="cfgitem-base" name="base" display="block" value="">
+                            <label for="cfgitem-itemDescription">Valor a cobrar</label>
+                            <input type="text" class="form-control" id="cfgitem-amount" name="amount" value="">
+                            <label for="cfgitem-itemSku">Observações</label>
+                            <input type="text" class="form-control" id="cfgitem-idItem" name="idItem" value="">
+                            <label for="cfgitem-telefone">Telefone (DDD + Número)</label>
+                            <input type="text" class="form-control" id="cfgitem-telefone" name="idItem" value="">
+                            <br>
+                            <button style="width: 100% !important" class="btn btn-primary submit-btn" onclick="generateUrl();return false;" >Gerar link</button>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <div id="result" class="row">
+                        <div class="col-md">
+                            <label for="cfgurl-final">URL final</label>
+                            <input disabled type="text" class="form-control" id="cfgurl-final" name="finalUrl" value="">
+                        </div>
+                    </div>
+                    <br>                    
+                </form>
+                <div id="share" class="row" style="display: none">
+                    <div id="shareWhatsapp" class="col-md-9" style="display: none;">
+                        <button class="btn btn-default submit-btn" style="width: 100% !important" onclick="shareWhatsapp(); return false;" >
+                            <i class="fa fa-whatsapp" aria-hidden="true"></i>      Compartilhar
+                        </button>
+                    </div>
+                    <div id="copyDiv" class="col-md-3">
+                        <button id="copyBtn" class="btn btn-default btn-copy" onclick="copyContent(); return false;" >
+                            Copiar
+                        </button>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col-md-4">
+            </div>
+        </div>
+    </div>
+
+<script src="./js/jquery-3.5.1.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/sample_shop.js"></script>
+
+
+<script> 
+
+$(document).ready(function(){
+    var urlCheckout = "http://localhost:3000/pay";
+    $("#cfgitem-base").val(urlCheckout);
+});
+  
+
+function generateUrl() { 
+    try{
+        var base = $('#cfgitem-base').val();
+        var tail = "";
+        var amount = $('#cfgitem-amount').val(); 
+        var idItem = $('#cfgitem-idItem').val();
+        // Joining the strings together 
+        var encTail = btoa(tail.concat('amount=',amount,'&id=', idItem, '&currency=BRL')); 
+        var finalUrl = base.concat('?',encTail);
+        $('#result').css('display', 'block');
+        $('#share').css('display', 'flex');
+        $('#cfgurl-final').val(finalUrl);
+        
+        if(document.getElementById("cfgitem-telefone").value.length > 0){
+            $('#shareWhatsapp').css('display', 'flex');
+            $('#shareWhatsapp').removeClass('col-md-9').removeClass('col-md-0').addClass('col-md-9');
+            $('#copyDiv').removeClass('col-md-3').removeClass('col-md-12').addClass('col-md-3');
+        }else{
+            $('#shareWhatsapp').removeClass('col-md-9').addClass('col-md-0');
+            $('#shareWhatsapp').css('display', 'none');
+            $('#copyDiv').removeClass('col-md-3').addClass('col-md-12');
+            $('#copyBtn').css('width', '100%');
+        }
+        console.log('Final url= ' + finalUrl); 
+    }catch(e){
+        console.log(e);
+    }  
+} 
+
+function copyContent() {
+  /* Get the text field */
+
+  try{
+    var txtarea = document.createElement("textarea");
+    txtarea.value = document.getElementById("cfgurl-final").value;
+    document.body.appendChild(txtarea);
+    txtarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(txtarea);
+    window.alert("URL copiada!");
+  }catch(e){
+    console.log(e);
+  }
+}
+
+function shareWhatsapp(){
+    var phone = document.getElementById("cfgitem-telefone").value;
+    var text = "Olá, você pode usar este link para efetuar o pagamento: " + document.getElementById("cfgurl-final").value ;
+    window.location = "https://api.whatsapp.com/send?phone=+55" + phone + "&text=" + text;
+}
+
+</script> 
+
+</body>
+</html>
