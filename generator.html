@@ -71,15 +71,16 @@
         </div>
     </div>
 
-<script src="./js/jquery-3.5.1.min.js"></script>
-<script src="./js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 <script src="./js/sample_shop.js"></script>
 
 
 <script> 
 
 $(document).ready(function(){
-    var urlCheckout = "http://localhost:3000/pay";
+    // TODO: add customer's payment URL
+    var urlCheckout = "";
     $("#cfgitem-base").val(urlCheckout);
 });
   
@@ -90,7 +91,7 @@ function generateUrl() {
         var tail = "";
         var amount = $('#cfgitem-amount').val(); 
         var idItem = $('#cfgitem-idItem').val();
-        // Joining the strings together 
+        
         var encTail = btoa(tail.concat('amount=',amount,'&id=', idItem, '&currency=BRL')); 
         var finalUrl = base.concat('?',encTail);
         $('#result').css('display', 'block');
@@ -114,8 +115,6 @@ function generateUrl() {
 } 
 
 function copyContent() {
-  /* Get the text field */
-
   try{
     var txtarea = document.createElement("textarea");
     txtarea.value = document.getElementById("cfgurl-final").value;
